@@ -1,49 +1,46 @@
 let userScore = 0;
 let computerScore = 0;
-const humanSelection = getUserChoice();
-const computerSelection = getComputerChoice();
+const rock = document.querySelector('.rock');
+const paper = document.querySelector('.paper');
+const scissors = document.querySelector('.scissors');
+const resultDisplay = document.createElement('div');
+const scoreDisplay = document.createElement('div');
 
-function getUserChoice() {
-    const userChoice = prompt('Choose rock, paper, or scissors:');
-    return userChoice.toLowerCase();
-}
+document.body.appendChild(resultDisplay);
+document.body.appendChild(scoreDisplay);
 
 function getComputerChoice() {
     const choices = ['rock', 'paper', 'scissors'];
-    const randomIndex = Math.floor(Math.random() * choices.length);
-    return choices[randomIndex];
+    return choices[Math.floor(Math.random() * choices.length)];
 }
 
-function playRound(getUserChoice, getComputerChoice) {
-    const userChoice = getUserChoice();
-    const computerChoice = getComputerChoice();
-    console.log(`User chose: ${userChoice}, Computer chose: ${computerChoice}`);
-    
+function playRound(userChoice, computerChoice) {
     if (userChoice === computerChoice) {
-        return 'The game is a tie!';
+        return "It's a tie!";
     } else if (
         (userChoice === 'rock' && computerChoice === 'scissors') ||
         (userChoice === 'paper' && computerChoice === 'rock') ||
         (userChoice === 'scissors' && computerChoice === 'paper')
     ) {
-        return 'User wins!';
+        userScore++;
+        return "You win!";
     } else {
-        return 'Computer wins!';
+        computerScore++;
+        return "Computer wins!";
     }
 }
 
-function playGame() {
-    for (let i = 0; i < 5; i++) {
-        const result = playRound(getUserChoice, getComputerChoice);
-        console.log(result);
-        if (result === 'User wins!') {
-            userScore++;
-        } else if (result === 'Computer wins!') {
-            computerScore++;
-        }
-        console.log('User score:', userScore);
-        console.log('Computer score:', computerScore);
-    }
+function updateDisplay(result, userChoice, computerChoice) {
+    resultDisplay.textContent = `${result} You chose ${userChoice}, computer chose ${computerChoice}.`;
+    scoreDisplay.textContent = `Score - You: ${userScore}, Computer: ${computerScore}`;
 }
 
-playGame();
+function handleChoice(userChoice) {
+    const computerChoice = getComputerChoice();
+    const result = playRound(userChoice, computerChoice);
+    updateDisplay(result, userChoice, computerChoice);
+}
+
+rock.addEventListener('click', () => handleChoice('rock'));
+paper.addEventListener('click', () => handleChoice('paper'));
+scissors.addEventListener('click', () => handleChoice('scissors'));
